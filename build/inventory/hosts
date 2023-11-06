@@ -1,0 +1,26 @@
+all:
+  children:
+    leafs:
+      hosts:
+        clab-Arista-2s-3l-leaf1:
+
+        clab-Arista-2s-3l-leaf2:
+
+        clab-Arista-2s-3l-leaf3:
+
+
+    spines:
+      hosts:
+        clab-Arista-2s-3l-spine1:
+
+        clab-Arista-2s-3l-spine2:
+
+
+    linux:
+      hosts:
+        clab-Arista-2s-3l-client1:
+          #ansible_host: 172.20.20.7
+        clab-Arista-2s-3l-client2:
+          #ansible_host: 172.20.20.2
+        clab-Arista-2s-3l-client3:
+          #ansible_host: 172.20.20.4

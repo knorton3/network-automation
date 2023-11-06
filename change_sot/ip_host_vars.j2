@@ -1,0 +1,13 @@
+---
+{% for device in devices %}
+{% for int in device['interfaces'] %}
+{% for ip in int['ip_addresses'] %}
+configuration:
+  vlans:
+    vlan: {{ (ip['address'] | split('.')).2 }}
+  ip_addr:
+    ip: {{ (ip['address'] | split('/')).0 }}
+    mask: {{(ip['address']|string)[-2:]}}
+{% endfor %}
+{% endfor %}
+{% endfor %}

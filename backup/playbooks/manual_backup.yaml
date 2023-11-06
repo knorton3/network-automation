@@ -1,0 +1,36 @@
+
+---
+
+- name: CAPTURE DATE AND CREATE DIRECTORY
+  hosts: localhost
+
+  tasks:
+
+    - name: Capture Date
+      command: date +"%Y-%m-%d"
+      register: time
+      changed_when: false
+      delegate_to: localhost
+
+    - name: Create Directory
+      file:
+        path: ~/network-automation/backup/{{time.stdout}}
+        state: directory
+  run_once: yes
+
+- name: BACKUP ARISTA SWITCHES
+  hosts: eos
+  gather_facts: false
+  connection: network_cli
+
+  tasks:
+    - name: ARISTA SWITCH CONFIG
+      eos_command:
+        commands: show run
+      register: output
+
+    - name: SAVE ARISTA SWITCH CONFIG
+      copy:
+        content: "{{ output.stdout[0] }}"
+        dest: "~/network-automation/backup/{{hostvars.localhost.time.stdout}}/show_run_{{ inventory_hostname }}.txt"
+

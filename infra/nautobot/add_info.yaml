@@ -1,0 +1,100 @@
+---
+- name: "ADD INFO TO NAUTOBOT"
+  hosts: localhost
+  connection: local
+  gather_facts: false # No gathering facts about the container execution env
+  tasks:
+    - name: "ADD SITE"
+      networktocode.nautobot.site:
+        url: "{{ nautobot_host }}"
+        token: "{{ nautobot_token }}"
+        name: Connecticut
+        status: Active
+        state: present
+
+    - name: "ADD MANUFACTURER"
+      networktocode.nautobot.manufacturer:
+        url: "{{ nautobot_host }}"
+        token: "{{ nautobot_token }}"
+        name: Arista
+        state: present
+        description: Arista
+
+    - name: "ADD LOCATION TYPE"
+      networktocode.nautobot.location_type:
+        url: "{{ nautobot_host }}"
+        token: "{{ nautobot_token }}"
+        name: Network Closets
+        state: present
+
+    - name: "ADD DEVICE TYPE"
+      networktocode.nautobot.device_type:
+        url: "{{ nautobot_host }}"
+        token: "{{ nautobot_token }}"
+        model: ceos
+        manufacturer: Arista
+        state: present
+
+    - name: "ADD PLATFORM"
+      networktocode.nautobot.platform:
+        url: "{{ nautobot_host }}"
+        token: "{{ nautobot_token }}"
+        name: EOS
+        manufacturer: Arista
+        state: present
+
+    - name: "ADD DEVICE ROLE"
+      networktocode.nautobot.device_role:
+        url: "{{ nautobot_host }}"
+        token: "{{ nautobot_token }}"
+        name: Switch
+        color: "008000"
+        vm_role: true
+
+    - name: ADD ARISTA DEVICES
+      networktocode.nautobot.device:
+        url: "{{ nautobot_host }}"
+        token: "{{ nautobot_token }}"
+        name: "{{ item['name'] }}"
+        site: "{{ item['site'] }}"
+        device_role: "{{ item['device_role'] }}"
+        device_type: "{{ item['device_type'] }}"
+        platform: "{{ item['platform'] }}"
+        status: Active # Newly required for Nautobot, a status of some kind
+      loop: "{{ devices }}"
+
+    - name: "ADD INTERFACE TO A DEVICE"
+      networktocode.nautobot.device_interface:
+        url: "{{ nautobot_host }}"
+        token: "{{ nautobot_token }}"
+        device: clab-Arista-2s-3l-leaf3
+        name: vlan13
+        type: Virtual
+        state: present
+        status: Active
+
+    - name: "ADD INTERFACE TO A DEVICE"
+      networktocode.nautobot.device_interface:
+        url: "{{ nautobot_host }}"
+        token: "{{ nautobot_token }}"
+        device: clab-Arista-2s-3l-leaf3
+        name: vlan14
+        type: Virtual
+        state: present
+        status: Active
+
+    - name: "ADD IP ADDRESS"
+      networktocode.nautobot.ip_address:
+        url: "{{ nautobot_host }}"
+        token: "{{ nautobot_token }}"
+        address: "192.168.13.1/24"
+        status: Active
+        state: present
+
+    - name: "ADD IP ADDRESS"
+      networktocode.nautobot.ip_address:
+        url: "{{ nautobot_host }}"
+        token: "{{ nautobot_token }}"
+        address: "192.168.14.1/24"
+        status: Active
+        state: present

@@ -1,0 +1,39 @@
+---
+
+- name: GET DEVICE INFORMATION FROM THE GRAPHQL API
+  hosts: localhost
+  vars:
+    # FILL IN WITH PROPER REGION VALUE FOR YOUR SYSTEM      
+    nautobot_host: "http://172.31.102.7:8000/"
+    nautobot_token: "CHANGE ME"
+    nautobot_query: |
+      query {
+              devices(site: "{{ site_slug }}", name: "{{ switch_name }}") {
+                name
+                interfaces (name: "vlan{{ vlan }}"){
+                  ip_addresses {
+                    address 
+            }
+          }
+         } 
+        }
+      
+
+  tasks:
+    - name: GET SITE DEVICES INFORMATION FROM NAUTOBOT
+      networktocode.nautobot.query_graphql:
+        url: "{{ nautobot_host }}"
+        token: "{{ nautobot_token }}"
+        validate_certs: false
+        query: "{{ nautobot_query }}"
+        update_hostvars: true
+
+    - debug:
+        var: devices
+        verbosity: 1
+
+
+    - name: RENDER THE SITE REPORT
+      template:
+        src: ip_host_vars.j2
+        dest: ./inventory/host_vars/{{ switch_name }}.yaml

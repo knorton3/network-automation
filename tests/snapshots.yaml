@@ -1,0 +1,34 @@
+---
+
+- name: CAPTURE DATE AND CREATE DIRECTORY
+  hosts: localhost
+
+  tasks:
+
+    - name: Capture Date
+      command: date +"%Y-%m-%d"
+      register: time
+      changed_when: false
+      delegate_to: localhost
+
+    - name: Create Directory
+      file:
+        path: /home/gitlab-runner/network-automation/configs
+        state: directory  
+  run_once: yes
+
+- name: BACKUP ARISTA SWITCHES
+  hosts: eos
+  gather_facts: false
+  connection: network_cli
+
+  tasks:
+    - name: ARISTA SWITCH CONFIG
+      eos_command:
+        commands: show run
+      register: output
+
+    - name: COPY SWITCH CONFIGS
+      copy:
+        content: "{{ output.stdout[0] }}"
+        dest: "/home/gitlab-runner/network-automation/configs/show_run_{{ inventory_hostname }}.txt"

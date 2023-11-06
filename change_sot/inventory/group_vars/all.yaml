@@ -1,0 +1,8 @@
+site_slug: "connecticut"
+switch_name: "clab-Arista-2s-3l-leaf3"
+vlan: "14"
+snmp:
+  switch_names:
+    names: 
+      - "clab-Arista-2s-3l-spine1"
+      - "clab-Arista-2s-3l-spine2"

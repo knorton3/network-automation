@@ -1,0 +1,25 @@
+
+---
+
+version: '3.7'
+services:
+  web:
+    image: 'gitlab/gitlab-ce:latest'
+    container_name: gitlab-ce
+    restart: unless-stopped
+    hostname: 'ed26757f4b2c.mylabserver.com'
+    environment:
+      GITLAB_OMNIBUS_CONFIG: |
+        # Add any other gitlab.rb configuration here, each on its own line
+        external_url 'http://ed26757f4b2c.mylabserver.com'
+    ports:
+      - '2222:22'
+      - '80:80'
+      - '8443:443'
+    volumes:
+    - '~/srv/gitlab/config:/etc/gitlab'
+    - '~/srv/gitlab/logs:/var/log/gitlab'
+    - '~/srv/gitlab/data:/var/opt/gitlab'
+    shm_size: '2gb'
+
+

@@ -1,0 +1,66 @@
+! Command: show running-config
+! device: leaf1 (cEOSLab, EOS-4.25.10M-29053933.42510M (engineering build))
+!
+no aaa root
+!
+username admin privilege 15 role network-admin secret sha512 $6$OzFeaB7AcUqxTg9C$nsi8nlKYwQpvf3h4MBN2gs2C75eEHkxbnFBZKabN6OaWv7rfaCvSSlKmZUtLqCmpKXbUgT1ITzZKomk4sjvut0
+!
+transceiver qsfp default-mode 4x10G
+!
+service routing protocols model multi-agent
+!
+hostname leaf1
+!
+spanning-tree mode mstp
+!
+vlan 11
+!
+interface Ethernet1
+   no switchport
+   ip address 192.168.1.2/24
+!
+interface Ethernet2
+   no switchport
+   ip address 192.168.10.2/24
+!
+interface Ethernet3
+   switchport access vlan 11
+!
+interface Loopback1
+   ip address 10.255.255.11/32
+!
+interface Management0
+   ip address 172.20.20.6/24
+   ipv6 address 2001:172:20:20::6/64
+!
+interface Vlan11
+   ip address virtual 192.168.11.1/24
+!
+interface Vxlan1
+   vxlan source-interface Loopback1
+   vxlan udp-port 4789
+   vxlan vlan 11 vni 1111
+   vxlan flood vtep 10.255.255.12 10.255.255.13
+!
+ip routing
+!
+ip route 0.0.0.0/0 172.20.20.1
+!
+ipv6 route ::/0 2001:172:20:20::1
+!
+router bgp 201
+   maximum-paths 2 ecmp 2
+   neighbor 192.168.1.1 remote-as 100
+   neighbor 192.168.10.1 remote-as 100
+   redistribute connected
+!
+management api http-commands
+   no shutdown
+!
+management api gnmi
+   transport grpc default
+!
+management api netconf
+   transport ssh default
+!
+end

@@ -1,0 +1,12 @@
+spine1: 1
+spine2: 10
+leaf_vni_id_1: 12
+leaf_vni_id_2: 13
+loopback1: 11
+bgp_id: 201
+vlans:
+  - 11
+  - 12
+  - 13
+vni: 1111
+vxlan_vlan: 11

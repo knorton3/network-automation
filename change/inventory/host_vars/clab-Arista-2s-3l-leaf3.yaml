@@ -1,0 +1,7 @@
+---
+configuration:
+  vlans:
+    vlan: 14
+  ip_addr:
+    ip: "192.168.14.1"
+    mask: 24

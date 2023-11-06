@@ -1,0 +1,63 @@
+# Arista 2 Spine and 3 Leafs
+name: Arista-2s-3l
+
+topology:
+  kinds:
+    ceos:
+      image: ceos:4.25.10M
+    linux:
+      image: ghcr.io/hellt/network-multitool
+  nodes:
+    leaf1:
+      kind: ceos
+      mgmt-ipv4: 172.20.20.21       
+      mgmt-ipv6: 2001:172:20:20::21      
+      ports:
+        - 8021:22
+    leaf2:
+      kind: ceos
+      mgmt-ipv4: 172.20.20.22       
+      mgmt-ipv6: 2001:172:20:20::22   
+      ports:
+        - 8022:22
+    leaf3:
+      kind: ceos
+      mgmt-ipv4: 172.20.20.23       
+      mgmt-ipv6: 2001:172:20:20::23   
+      ports:
+        - 8023:22
+    spine1:
+      kind: ceos
+      mgmt-ipv4: 172.20.20.11       
+      mgmt-ipv6: 2001:172:20:20::11   
+      ports:
+        - 8011:22
+    spine2:
+      kind: ceos
+      mgmt-ipv4: 172.20.20.12       
+      mgmt-ipv6: 2001:172:20:20::12   
+      ports:
+        - 8012:22
+    client1:
+      kind: linux
+      mgmt-ipv4: 172.20.20.31       
+      mgmt-ipv6: 2001:172:20:20::31   
+    client2:
+      kind: linux
+      mgmt-ipv4: 172.20.20.32       
+      mgmt-ipv6: 2001:172:20:20::32   
+    client3:
+      kind: linux
+      mgmt-ipv4: 172.20.20.33       
+      mgmt-ipv6: 2001:172:20:20::33   
+
+  links:
+    - endpoints: ["leaf1:eth1", "spine1:eth1"]
+    - endpoints: ["leaf2:eth1", "spine1:eth2"]
+    - endpoints: ["leaf3:eth1", "spine1:eth3"]
+    - endpoints: ["leaf1:eth2", "spine2:eth1"]
+    - endpoints: ["leaf2:eth2", "spine2:eth2"]
+    - endpoints: ["leaf3:eth2", "spine2:eth3"]
+    - endpoints: ["client1:eth1", "leaf1:eth3"]
+    - endpoints: ["client2:eth1", "leaf2:eth3"]
+    - endpoints: ["client3:eth1", "leaf3:eth3"] 

@@ -1,0 +1,54 @@
+! Command: show running-config
+! device: spine2 (cEOSLab, EOS-4.25.10M-29053933.42510M (engineering build))
+!
+no aaa root
+!
+username admin privilege 15 role network-admin secret sha512 $6$iBx8VfrNzpPS7mvj$63jbWXu5WLqtYgbjztA6Jlyf1efFFdx7ey/N7M7IbjYt6xiNBai.kry27bmpuCxgRPgyNWlBZrlnFKGnP.Ja/.
+!
+transceiver qsfp default-mode 4x10G
+!
+service routing protocols model multi-agent
+!
+hostname spine2
+!
+spanning-tree mode mstp
+!
+interface Ethernet1
+   no switchport
+   ip address 192.168.10.1/24
+!
+interface Ethernet2
+   no switchport
+   ip address 192.168.20.1/24
+!
+interface Ethernet3
+   no switchport
+   ip address 192.168.30.1/24
+!
+interface Management0
+   ip address 172.20.20.9/24
+   ipv6 address 2001:172:20:20::9/64
+!
+ip routing
+!
+ip route 0.0.0.0/0 172.20.20.1
+!
+ipv6 route ::/0 2001:172:20:20::1
+!
+router bgp 100
+   maximum-paths 2 ecmp 2
+   neighbor 192.168.10.2 remote-as 201
+   neighbor 192.168.20.2 remote-as 202
+   neighbor 192.168.30.2 remote-as 203
+   redistribute connected
+!
+management api http-commands
+   no shutdown
+!
+management api gnmi
+   transport grpc default
+!
+management api netconf
+   transport ssh default
+!
+end

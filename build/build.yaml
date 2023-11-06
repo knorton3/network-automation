@@ -1,0 +1,129 @@
+---
+
+- name: BUILD SPINE ARISTA SWITCHES
+  hosts: spines
+  gather_facts: false
+  connection: network_cli
+
+  tasks:
+    - name: CONFIGURE BGP
+      eos_config:
+        parents: router bgp 100
+        lines:
+          - neighbor 192.168.{{ leaf1 }}.2 remote-as 201
+          - neighbor 192.168.{{ leaf2 }}.2 remote-as 202
+          - neighbor 192.168.{{ leaf3 }}.2 remote-as 203
+          - maximum-paths 2 ecmp 2
+          - redistribute connected
+          - ip routing
+
+    - name: CONFIGURE INTERFACE ETHERNET 1
+      eos_config:
+        parents: interface ethernet 1
+        lines:
+          - no switchport 
+          - ip address 192.168.{{ leaf1 }}.1/24
+          - no shutdown
+
+    - name: CONFIGURE INTERFACE ETHERNET 2
+      eos_config:
+        parents: interface ethernet 2
+        lines:
+          - no switchport 
+          - ip address 192.168.{{ leaf2 }}.1/24
+          - no shutdown
+
+    - name: CONFIGURE INTERFACE ETHERNET 3
+      eos_config:
+        parents: interface ethernet 3
+        lines:
+          - no switchport 
+          - ip address 192.168.{{ leaf3 }}.1/24
+          - no shutdown
+
+- name: BUILD LEAF ARISTA SWITCHES
+  hosts: leafs
+  gather_facts: false
+  connection: network_cli
+
+  tasks:
+    - name: CONFIGURE BGP
+      eos_config:
+        parents: router bgp {{ bgp_id }}
+        lines:
+          - neighbor 192.168.{{ spine1 }}.1 remote-as 100
+          - neighbor 192.168.{{ spine2 }}.1 remote-as 100
+          - maximum-paths 2 ecmp 2
+          - redistribute connected
+          - ip routing
+
+    - name: CONFIGURE  VLANS
+      eos_config:
+        lines:
+          - vlan {{ item }}
+      loop: "{{ vlans }}"         
+
+    - name: CONFIGURE INTERFACE ETHERNET 1
+      eos_config:
+        parents: interface ethernet 1
+        lines:
+          - no switchport 
+          - ip address 192.168.{{ spine1 }}.2/24
+          - no shutdown
+
+    - name: CONFIGURE INTERFACE ETHERNET 2
+      eos_config:
+        parents: interface ethernet 2
+        lines:
+          - no switchport 
+          - ip address 192.168.{{ spine2 }}.2/24
+          - no shutdown
+
+    - name: CONFIGURE INTERFACE LOOPBACK 1
+      eos_config:
+        parents: interface loopback 1
+        lines:
+          - ip address 10.255.255.{{ loopback1 }}/32
+
+    - name: CONFIGURE INTERFACE ETHERNET 3
+      eos_config:
+        parents: interface ethernet 3
+        lines:
+          - switchport mode access
+          - switchport access vlan {{ vxlan_vlan }}
+
+    - name: CONFIGURE VXLAN 1
+      eos_config:
+        parents: interface vxlan 1
+        lines:
+          - vxlan source-interface loopback 1
+          - vxlan vlan {{ vxlan_vlan }} vni {{ vni }}
+          - vxlan flood vtep 10.255.255.{{ leaf_vni_id_1 }} 10.255.255.{{ leaf_vni_id_2 }}
+          - no shutdown
+
+    - name: CONFIGURE INTERFACE VLAN 
+      eos_config:
+        parents: interface vlan {{ loopback1 }}
+        lines:
+          - ip address virtual 192.168.{{ loopback1 }}.1/24
+
+ 
+    - name: CONFIGURE SNMP
+      arista.eos.eos_snmp_server:
+        config:
+          communities:
+            - name: "netdevops"
+              acl_v4: "list3"
+              view: "view1"
+          contact: "admin"
+          hosts:
+            - host: "host02"
+              version: "2c"
+              user: "user1"
+
+          traps:
+            capacity:
+              arista_hardware_utilization_alert: True
+            bgp:
+              enabled: True
+

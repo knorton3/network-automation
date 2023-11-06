@@ -1,0 +1,29 @@
+all:
+  children:
+    eos:
+      hosts:
+        clab-Arista-2s-3l-leaf1:
+  
+        clab-Arista-2s-3l-leaf2:
+
+        clab-Arista-2s-3l-spine1:
+
+        clab-Arista-2s-3l-leaf3:
+
+        clab-Arista-2s-3l-spine2:
+
+      vars:
+        ansible_connection: ansible.netcommon.network_cli
+        ansible_network_os: arista.eos.eos
+        ansible_user: admin
+        ansible_password: admin
+        ansible_become: true
+        ansible_become_method: enable
+    linux:
+      hosts:
+        clab-Arista-2s-3l-client1:
+
+        clab-Arista-2s-3l-client2:
+
+        clab-Arista-2s-3l-client3:
+

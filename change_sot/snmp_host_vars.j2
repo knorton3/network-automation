@@ -1,0 +1,19 @@
+---
+{% for device in devices %}
+{% if device['name'] == "clab-Arista-2s-3l-spine1" %}
+config:
+{% for community in device['config_context']['config']['communities'] %}
+  communities:
+    name: "{{community['name']}}"
+    acl_v4: "{{community['acl_v4']}}"
+    view: "{{community['view']}}"
+  contact: "{{ device['config_context']['config']['contact'] }}"
+{% for host in device['config_context']['config']['hosts'] %}
+  hosts:
+    host: "{{host['host']}}"
+    version: "{{host['version']}}"
+    user: "{{host['user']}}"
+{% endfor %}
+{% endfor %}
+{% endif %}
+{% endfor %}

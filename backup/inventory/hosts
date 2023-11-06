@@ -1,0 +1,22 @@
+all:
+  children:
+    eos:
+      hosts:
+        clab-Arista-2s-3l-leaf1:
+  
+        clab-Arista-2s-3l-leaf2:
+
+        clab-Arista-2s-3l-spine1:
+
+        clab-Arista-2s-3l-leaf3:
+
+        clab-Arista-2s-3l-spine2:
+
+    linux:
+      hosts:
+        clab-Arista-2s-3l-client1:
+
+        clab-Arista-2s-3l-client2:
+
+        clab-Arista-2s-3l-client3:
+

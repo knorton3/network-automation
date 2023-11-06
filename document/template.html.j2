@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+        <link rel="stylesheet" href="css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:400,400i,700,700i,600,600i&amp;display=swap">
+        <link rel="stylesheet" href="css/simple-line-icons.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.11.1/baguetteBox.min.css">
+        <link rel="stylesheet" href="css/vanilla-zoom.min.css">
+    	<title>Ansible Network Automation Documentation</title>
+	</head>
+<body>
+	<main class="page landing-page">
+        
+        <section class="clean-block clean-info dark">
+            <div class="container">
+                <div class="block-heading">
+                    <h2 class="text-info">Network Automation Documentation</h2>
+                    <p><br></p>
+                </div>
+                <div class="row align-items-center">
+                    <div class="col">
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Device Name</th>
+                                        <th>Device Information</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for host in groups['eos'] %}
+                                    <tr>
+                                        <td>
+                                            <b>{{ hostvars[host].facts.ansible_facts.ansible_net_fqdn }}</b>
+                                        </td>
+                                        <td>
+                                            <div>
+                                                <div>
+                                                    <b>Version:</b> {{ hostvars[host].facts.ansible_facts.ansible_net_version }}
+                                                </div>
+                                                <div>    
+                                                    <b>Free Memory:</b> {{ hostvars[host].facts.ansible_facts.ansible_net_memfree_mb }}
+                                                </div>
+                                                <div>
+                                                    <b>Total Memory:</b> {{ hostvars[host].facts.ansible_facts.ansible_net_memtotal_mb }}
+                                                </div>
+                                                <div>
+                                                    <b>Configuration:</b></br>
+                                                {% autoescape false %}
+                                                    {{ hostvars[host].facts.ansible_facts.ansible_net_config | replace("\n", "<br/>") }}
+                                                {% endautoescape %} 
+                                                </div>
+                                            </div>
+                                        </td>                                 
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+    <footer class="page-footer">
+        <div class="footer-copyright">
+            <p>© 2023 Copyright Presidio</p>
+        </div>
+    </footer>
+</body>
+</html><!doctype html>

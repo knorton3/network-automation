@@ -1,0 +1,48 @@
+---
+
+- name: MAKE CHANGE ON SPINE ARISTA SWITCHES
+  hosts: spines
+  gather_facts: false
+  connection: network_cli
+
+  tasks:
+    - name: CONFIGURE SNMP ON SPINES
+      arista.eos.eos_snmp_server:
+        config:
+          communities:
+            - name: "{{ config.communities.name }}"
+              acl_v4: "{{ config.communities.acl_v4 }}"
+              view: "{{ config.communities.view }}"
+          contact: "{{ config.contact }}"
+          hosts:
+            - host: "{{ config.hosts.host }}"
+              version: "{{ config.hosts.version }}"
+              user: "{{ config.hosts.user }}"
+          traps:
+            capacity:
+              arista_hardware_utilization_alert: True
+            bgp:
+              enabled: True
+
+- name: MAKE CHANGE ON LEAF ARISTA SWITCHES
+  hosts: leafs
+  gather_facts: false
+  connection: network_cli
+
+  tasks:
+    - name: ADD  VLAN {{ configuration.vlans.vlan }}
+      eos_config:
+        lines:
+          - vlan {{ configuration.vlans.vlan }}
+
+    - name: RECONFIGURE INTERFACE ETHERNET 3
+      eos_config:
+        parents: interface ethernet 3
+        lines:
+          - switchport access vlan {{ configuration.vlans.vlan }}
+
+    - name: CONFIGURE INTERFACE VLAN {{ configuration.vlans.vlan }}
+      eos_config:
+        parents: interface vlan {{ configuration.vlans.vlan }}
+        lines:
+          - ip address virtual {{ configuration.ip_addr.ip }}/{{ configuration.ip_addr.mask }}

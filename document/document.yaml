@@ -1,0 +1,34 @@
+---
+- name: DOCUMENT ARISTA DEVICES
+  hosts: eos
+  connection: network_cli
+  gather_facts: false
+
+  tasks:
+    - name: Collect all facts from device
+      arista.eos.eos_facts:
+        gather_subset:
+          - all
+      register: facts
+
+    - name: Display result
+      debug:
+        msg: "Model is {{facts.ansible_facts.ansible_net_fqdn}} and it is running {{facts.ansible_facts.ansible_net_version}}"
+    
+    - name: Create Directory
+      file:
+        path: ./css
+        state: directory
+      run_once: yes
+
+    - name: Copy file with owner and permissions
+      ansible.builtin.copy:
+        src: css/
+        dest: /var/www/netdevops/css/
+      run_once: yes
+
+    - name: Generate document
+      template:
+        src: ./template.html.j2
+        dest: /var/www/netdevops/index.html
+      run_once: yes
