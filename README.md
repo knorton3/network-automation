@@ -73,6 +73,6 @@ By the end of the workshop.  The Network Engineer and Architect will gain the co
 
 ### For more information on how to participate in the workshop 
 
-#### Contact 
-##### [Ken Norton](knorton@presidio.com)
+#### Contact Ken Norton
+##### <knorton@presidio.com>
 ##### [@knorton3](https://twitter.com/knorton3)
