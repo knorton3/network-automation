@@ -59,6 +59,12 @@ Network Engineers and Architects will work on the following platforms
 
 <img width="263" alt="image" src="https://github.com/knorton3/network-automation/assets/96457860/f6837ab4-856b-4092-9c1d-adac401ca66a">
 
+### Network Diagram
+
+Two Ubuntu Linux Server will be required to support the workshop
+
+![image](https://github.com/knorton3/network-automation/assets/96457860/1bafc55d-88fa-45cf-acbf-8623ed401a4c)
+
 # Network Automation Workflow
 
 During the workshop, Network Engineers and Architects will have the opportunity to become familiar with some of the following technology:
