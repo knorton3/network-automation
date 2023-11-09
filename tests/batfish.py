@@ -28,9 +28,9 @@ if __name__ == "__main__":
     print(r1)
     
     print("ANALYSIS // lpmRoutes()")
-    r1 = bfq.lpmRoutes(ip='192.168.14.1').answer().frame()
-    assert r1.empty is False
-    print(r1)
+    r2 = bfq.lpmRoutes(ip='192.168.14.1').answer().frame()
+    assert r2.empty is False
+    print(r2)
 
     # Saving output
     if not os.path.exists(output_dir):
